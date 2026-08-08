@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Importación | ShopOnlineGT</title>
+<style>
+:root{--primary:#111827;--accent:#e11d48;--bg:#f5f7fb;--card:#fff;--muted:#6b7280;--line:#e5e7eb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:#111827}
+.wrap{max-width:760px;margin:0 auto;padding:14px}
+.card{background:var(--card);border-radius:18px;padding:24px;box-shadow:0 7px 26px rgba(0,0,0,.08)}
+h1{margin:0;text-align:center;font-size:27px}
+.sub{text-align:center;color:var(--muted);font-size:14px;margin:7px 0 22px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.field{display:flex;flex-direction:column;gap:7px}
+.full{grid-column:1/-1}
+label{font-size:14px;font-weight:700}
+input,select{width:100%;height:46px;border:1px solid #d1d5db;border-radius:10px;padding:0 12px;font-size:16px;background:#fff}
+input:focus,select:focus{outline:2px solid rgba(225,29,72,.15);border-color:var(--accent)}
+.hint{font-size:12px;color:var(--muted)}
+.btn{width:100%;height:48px;border:0;border-radius:11px;background:var(--accent);color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:18px}
+.results{display:none;margin-top:23px;border-top:1px solid var(--line);padding-top:20px}
+.results h2{font-size:18px;margin:0 0 10px}
+.row{display:flex;justify-content:space-between;gap:15px;padding:9px 0;font-size:14px;border-bottom:1px solid #f0f0f0}
+.row span:last-child{font-weight:700;text-align:right}
+.total{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-top:15px;padding:17px;border-radius:13px;background:#f3f4f6}
+.total span{font-weight:700}
+.total strong{font-size:25px}
+.note{font-size:12px;line-height:1.5;color:var(--muted);margin-top:13px}
+.error{display:none;margin-top:12px;padding:10px;border-radius:9px;background:#fff1f2;color:#be123c;font-size:13px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.card{padding:18px}h1{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+<h1>Calculadora de Importación</h1>
+<p class="sub">Calcula de forma estimada el costo de importar tu artículo a Guatemala.</p>
+
+<div class="grid">
+<div class="field full">
+<label for="category">Tipo de artículo</label>
+<select id="category"><option value="">Selecciona el tipo de artículo</option></select>
+</div>
+<div class="field">
+<label for="price">Precio del artículo (US$)</label>
+<input id="price" type="number" min="0" step="0.01" placeholder="Ej. 100.00">
+<div class="hint">Precio final que pagaste, incluyendo shipping y taxes.</div>
+</div>
+<div class="field">
+<label for="weight">Peso exacto (lb)</label>
+<input id="weight" type="number" min="0" step="0.01" placeholder="Ej. 5">
+<div class="hint">Ingresa el peso exacto en libras.</div>
+</div>
+</div>
+
+<div id="error" class="error"></div>
+<button class="btn" type="button" onclick="calculate()">Calcular importación</button>
+
+<div id="results" class="results">
+<h2>Detalle de costos</h2>
+<div class="row"><span>Transporte aéreo</span><span id="air"></span></div>
+<div class="row"><span>IVA</span><span id="vat"></span></div>
+<div class="row"><span>Arancel</span><span id="duty"></span></div>
+<div class="row"><span>Desaduanaje</span><span id="clearance"></span></div>
+<div class="row"><span>Seguro</span><span id="insurance"></span></div>
+<div class="total"><span>Total de la importación</span><strong id="total"></strong></div>
+<p class="note">Cotización estimada. El valor puede variar según la clasificación arancelaria, peso facturable y las condiciones finales de la importación.</p>
+</div>
+</div>
+</div>
+
+<script>
+const CONFIG={exchangeRate:7.87,vatRate:.12,insuranceRate:.022,clearanceGTQ:28,
+freightRanges:[{min:1,max:29.999999,rate:3.30},{min:30,max:119.999999,rate:3.70}]};
+
+const tariffs={
+"Aseo personal":15,"Artículos de fiesta":15,"Audífonos":0,"Automóvil - bocinas":0,
+"Automóvil - Repuesto":10,"Automóvil - repuesto interno de motor":0,"Bicicletas":15,
+"Bicicletas - accesorios":15,"Bicicletas - Partes":10,"Bocinas":0,"Cámara":0,
+"Cámara - accesorios":15,"Cámara - repuestos":0,"Cámara - seguridad sin DVR":0,
+"Cámara - seguridad con DVR":15,"Cables":10,"Catálogos":15,"CDs":10,"Celular":0,
+"Celular - accesorio":15,"Celular - batería":15,"Celular - repuesto":0,
+"Cocina - accesorios":15,"Computadora":0,"Computadora - Baterías":15,
+"Computadora - case":15,"Computadora - laptop":0,"Computadora - partes":0,
+"Comestibles (con regulación)":15,"Cosméticos (con regulación)":15,"Cuadernos":15,
+"Deporte - Accesorios":15,"DVD players":15,"Edredones":15,"Electrodomésticos":15,
+"Equipo medico - accesorios":15,"Equipo medico - electrónicos":0,
+"Equipo medico - herramientas":0,"Equipo medico - mascarillas":15,"Etiquetas":15,
+"Grabadoras":15,"Herramientas de mano":5,"Impresoras":0,
+"Impresoras - cartuchos con chip":15,"Impresoras - tinta":15,
+"Joyería y bisutería":15,"Juguetes":15,"Lentes":15,"Lentes - solo aro":0,
+"Lentes - contacto":5,"Lentes - Sol":15,
+"Libros - comics, dinámicos de niños, manga":15,"Libros - Solo de lectura":0,
+"Llaves":10,"Luces":15,"Material impreso":15,"Mochilas":15,"MP3":15,"Muebles":15,
+"Música - Accesorios":10,"Música - Instrumentos":10,"Música - Guitarra":15,
+"Música - Partes":10,"Relojes de todo tipo":15,"Repuestos electrónicos":0,
+"Ropa":15,"Scanner":0,"Suplementos alimenticios (con regulación)":15,"Tablet":0,
+"Videocámaras":0,"Videojuegos (IPSA obligatorio)":3,"Videojuegos - Accesorios":15,
+"Videojuegos - Consola":15,"Zapatos de todo tipo":15};
+
+const category=document.getElementById('category');
+Object.keys(tariffs).sort((a,b)=>a.localeCompare(b,'es')).forEach(name=>{
+ const o=document.createElement('option'); o.value=name; o.textContent=name+' — '+tariffs[name]+'%'; category.appendChild(o);
+});
+
+const money=n=>'$'+n.toFixed(2);
+const quetzales=n=>'Q'+n.toFixed(2);
+
+function showError(msg){const e=document.getElementById('error');e.textContent=msg;e.style.display='block';}
+function clearError(){document.getElementById('error').style.display='none';}
+
+function calculate(){
+ clearError();
+ const product=Number(document.getElementById('price').value);
+ const weight=Number(document.getElementById('weight').value);
+ const cat=category.value;
+ if(product<=0||weight<=0||!cat){showError('Completa el tipo de artículo, el precio y el peso.');return;}
+ const range=CONFIG.freightRanges.find(r=>weight>=r.min&&weight<=r.max);
+ if(!range){showError('El peso debe estar entre 1 y 119.99 libras.');return;}
+
+ // Final agreed formula:
+ // Seguro 1 = 2.2% del precio
+ // CIF = producto + flete + seguro 1 (internal tax base only)
+ // IVA = 12% CIF
+ // Arancel = tariff% CIF
+ // Desaduanaje = Q28
+ // Seguro 2 = 2.2% CIF (shown at the end)
+ // Product price is NOT added to import total.
+ const freightUSD=weight*range.rate;
+ const insurance1USD=product*CONFIG.insuranceRate;
+ const cifUSD=product+freightUSD+insurance1USD;
+ const vatUSD=cifUSD*CONFIG.vatRate;
+ const dutyUSD=cifUSD*(tariffs[cat]/100);
+ const insurance2USD=cifUSD*CONFIG.insuranceRate;
+
+ const freightGTQ=freightUSD*CONFIG.exchangeRate;
+ const vatGTQ=vatUSD*CONFIG.exchangeRate;
+ const dutyGTQ=dutyUSD*CONFIG.exchangeRate;
+ const insuranceGTQ=insurance2USD*CONFIG.exchangeRate;
+ const totalGTQ=freightGTQ+vatGTQ+dutyGTQ+CONFIG.clearanceGTQ+insuranceGTQ;
+
+ document.getElementById('air').textContent=quetzales(freightGTQ);
+ document.getElementById('vat').textContent=quetzales(vatGTQ);
+ document.getElementById('duty').textContent=quetzales(dutyGTQ);
+ document.getElementById('clearance').textContent=quetzales(CONFIG.clearanceGTQ);
+ document.getElementById('insurance').textContent=quetzales(insuranceGTQ);
+ document.getElementById('total').textContent=quetzales(totalGTQ);
+ document.getElementById('results').style.display='block';
+ document.getElementById('results').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+</script>
+</body>
+</html>
