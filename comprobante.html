@@ -1,201 +1,699 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notificación de paquete | Importadora Shop Online</title>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Notificación de Paquete | ShopOnlineGT</title>
+
 <style>
-* {    box-sizing: border-box;}
-body {    margin: 0;    padding: 20px;    font-family: Arial, Helvetica, sans-serif;    background: #f4f4f4;    color: #222;}
-.contenedor {    width: 100%;    max-width: 650px;    margin: 20px auto;    background: #fff;    border-radius: 14px;    padding: 30px;    box-shadow: 0 3px 15px rgba(0,0,0,0.10);}
-.titulo {    text-align: center;    margin-bottom: 8px;    font-size: 28px;    font-weight: bold;}
-.subtitulo {    text-align: center;    color: #666;    margin-bottom: 30px;    line-height: 1.5;}
-.seccion {    font-size: 19px;    font-weight: bold;    margin-top: 28px;    margin-bottom: 18px;    padding-bottom: 8px;    border-bottom: 2px solid #eee;}
-label {    display: block;    font-weight: bold;    margin-top: 17px;    margin-bottom: 7px;}
-.obligatorio {    color: #c00;}
-input,select,textarea {    width: 100%;    padding: 13px;    border: 1px solid #ccc;    border-radius: 7px;    font-size: 15px;    background: #fff;}
-input:focus,select:focus,textarea:focus {    outline: none;    border-color: #555;}
-textarea {    min-height: 85px;    resize: vertical;}
-.nota {    margin-top: 7px;    font-size: 13px;    color: #666;    line-height: 1.4;}
-.archivo {    margin-top: 8px;    padding: 14px;    border: 1px dashed #aaa;    background: #fafafa;}
-.importante {    margin-top: 20px;    padding: 18px;    background: #fff8e6;    border: 1px solid #e5c875;    border-radius: 8px;    line-height: 1.55;    font-size: 14px;}
-.importante-titulo {    font-weight: bold;    font-size: 16px;    margin-bottom: 10px;}
-.importante ol {    margin-top: 8px;    padding-left: 22px;}
-.importante li {    margin-bottom: 12px;}
-.terminos {    margin-top: 25px;    padding: 15px;    background: #f7f7f7;    border-radius: 8px;}
-.terminos label {    margin: 0;    display: flex;    align-items: flex-start;    gap: 10px;    font-weight: normal;    line-height: 1.5;}
-.terminos input[type="checkbox"] {    width: 20px;    height: 20px;    min-width: 20px;    margin-top: 2px;}
-button {    width: 100%;    margin-top: 28px;    padding: 15px;    border: none;    border-radius: 8px;    background: #222;    color: white;    font-size: 17px;    font-weight: bold;    cursor: pointer;}
-button:hover {    opacity: 0.9;}
-button:disabled {    opacity: 0.6;    cursor: wait;}
-.mensaje {    margin-top: 20px;    text-align: center;    font-weight: bold;    line-height: 1.5;}
-.exito {    color: #16833b;}
-.error {    color: #c62828;}
-@media (max-width: 600px) {
-    body {        padding: 10px;    }
-    .contenedor {        padding: 20px;        margin: 5px auto;    }
-    .titulo {        font-size: 24px;    }
+
+:root{
+--primary:#111827;
+--accent:#e11d48;
+--bg:#f5f7fb;
+--card:#fff;
+--muted:#6b7280;
+--line:#e5e7eb
 }
-</style></head>
+
+*{
+box-sizing:border-box
+}
+
+body{
+margin:0;
+background:var(--bg);
+font-family:Arial,Helvetica,sans-serif;
+color:#111827
+}
+
+.wrap{
+max-width:760px;
+margin:0 auto;
+padding:14px
+}
+
+.card{
+background:var(--card);
+border-radius:18px;
+padding:24px;
+box-shadow:0 7px 26px rgba(0,0,0,.08)
+}
+
+h1{
+margin:0;
+text-align:center;
+font-size:27px
+}
+
+.sub{
+text-align:center;
+color:var(--muted);
+font-size:14px;
+margin:7px 0 22px
+}
+
+.section-title{
+font-size:18px;
+font-weight:700;
+margin:22px 0 15px;
+padding-bottom:10px;
+border-bottom:1px solid var(--line)
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px
+}
+
+.field{
+display:flex;
+flex-direction:column;
+gap:7px
+}
+
+.full{
+grid-column:1/-1
+}
+
+label{
+font-size:14px;
+font-weight:700
+}
+
+.required{
+color:var(--accent)
+}
+
+input,
+select,
+textarea{
+width:100%;
+border:1px solid #d1d5db;
+border-radius:10px;
+padding:12px;
+font-size:16px;
+background:#fff;
+font-family:Arial,Helvetica,sans-serif
+}
+
+input,
+select{
+height:46px
+}
+
+textarea{
+min-height:90px;
+resize:vertical
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+outline:2px solid rgba(225,29,72,.15);
+border-color:var(--accent)
+}
+
+.hint{
+font-size:12px;
+color:var(--muted);
+line-height:1.5
+}
+
+.upload{
+border:1px dashed #d1d5db;
+border-radius:12px;
+padding:16px;
+background:#fafafa
+}
+
+.upload input{
+height:auto;
+padding:10px;
+border:1px solid #d1d5db
+}
+
+.important{
+margin-top:18px;
+padding:15px;
+border-radius:12px;
+background:#fff1f2;
+border:1px solid #fecdd3
+}
+
+.important-title{
+color:#be123c;
+font-size:15px;
+font-weight:700;
+margin-bottom:9px
+}
+
+.note-list{
+font-size:12px;
+line-height:1.55;
+color:#4b5563;
+margin:8px 0 0;
+padding-left:20px
+}
+
+.note-list li{
+margin-bottom:8px
+}
+
+.terms{
+margin-top:18px;
+padding:13px;
+border-radius:10px;
+background:#f9fafb;
+border:1px solid var(--line)
+}
+
+.terms label{
+display:flex;
+align-items:flex-start;
+gap:9px;
+font-weight:600;
+line-height:1.5
+}
+
+.terms input{
+width:19px;
+height:19px;
+min-width:19px;
+margin-top:2px
+}
+
+.btn{
+width:100%;
+height:48px;
+border:0;
+border-radius:11px;
+background:var(--accent);
+color:#fff;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+margin-top:18px
+}
+
+.btn:hover{
+opacity:.92
+}
+
+.btn:disabled{
+opacity:.6;
+cursor:wait
+}
+
+.message{
+display:none;
+margin-top:12px;
+padding:10px;
+border-radius:9px;
+font-size:13px;
+text-align:center
+}
+
+.success{
+display:block;
+background:#ecfdf5;
+color:#047857
+}
+
+.error{
+display:block;
+background:#fff1f2;
+color:#be123c
+}
+
+.footer{
+text-align:center;
+font-size:11px;
+color:var(--muted);
+margin-top:18px
+}
+
+@media(max-width:600px){
+
+.grid{
+grid-template-columns:1fr
+}
+
+.full{
+grid-column:auto
+}
+
+.card{
+padding:18px
+}
+
+h1{
+font-size:24px
+}
+
+}
+
+</style>
+</head>
+
+
 <body>
-<div class="contenedor">
-    <div class="titulo">        Notificación de paquete    </div>
-    <div class="subtitulo">        Ingresa la información de tu paquete y adjunta tu comprobante de compra.    </div>
 
-    <div class="seccion">        Datos del paquete    </div>
+<div class="wrap">
 
-    <form id="formulario">
+<div class="card">
 
-        <label for="seccion">            Número de sección <span class="obligatorio">*</span>        </label>
-        <input            type="text"            id="seccion"            required        >
+<h1>Notificación de paquete</h1>
 
-        <label for="nombre">            Nombre <span class="obligatorio">*</span>        </label>
-        <input            type="text"            id="nombre"            required        >
-
-        <label for="transportista">            Transportista <span class="obligatorio">*</span>        </label>
-        <select id="transportista" required>
-            <option value="">                Selecciona una opción            </option>
-            <option value="USPS">                USPS            </option>
-            <option value="UPS">                UPS            </option>
-            <option value="FEDEX">                FedEx            </option>
-            <option value="AMAZON">                Amazon            </option>
-            <option value="OTRO">                Otro            </option>
-        </select>
-
-        <label for="tracking">            Número de rastreo <span class="obligatorio">*</span>        </label>
-        <input            type="text"            id="tracking"            required        >
-
-        <label for="tienda">            Tienda <span class="obligatorio">*</span>        </label>
-        <input            type="text"            id="tienda"            required        >
-
-        <label for="contenido">            Contenido del paquete <span class="obligatorio">*</span>        </label>
-        <textarea            id="contenido"            required        ></textarea>
-
-        <label for="total">            Total factura US$ <span class="obligatorio">*</span>        </label>
-        <input            type="number"            id="total"            min="0"            step="0.01"            placeholder="Ejemplo: 125.50"            required        >
-        <div class="nota">            Ingresa el valor total de la factura, incluyendo artículo(s), shipping y taxes.        </div>
-
-        <label for="correo">            Correo electrónico        </label>
-        <input            type="email"            id="correo"            placeholder="correo@ejemplo.com"        >
-
-        <div class="seccion">            Comprobante de compra        </div>
-
-        <label for="archivo">            Carga el comprobante de compra            <span class="obligatorio">*</span>        </label>
-        <input            class="archivo"            type="file"            id="archivo"            name="archivo"            accept="image/jpeg,image/png,application/pdf"            required        >
-        <div class="nota">            Formatos permitidos: JPG, PNG y PDF.        </div>
-
-        <div class="importante">
-            <div class="importante-titulo">                IMPORTANTE            </div>
-            <ol>
-                <li>                    Debes tomar en cuenta que si tu factura corresponde a más de un paquete debes recortar el área correspondiente o comunicarte con nosotros para asesorarte.                </li>
-                <li>                    Se declara la totalidad del documento, por lo que si incluyes productos o valores que no se encuentran en el paquete, pagarás el impuesto correspondiente por la totalidad que indique la factura.                </li>
-                <li>                    Importadora Shop Online recibe tu notificación con información sobre tu paquete, como cliente aceptas que los datos enviados son verídicos y pueden ser utilizados para la declaración jurada ante las autoridades Aduaneras de Guatemala. Queda a criterio del vista de aduana aceptar o no dicho documento. Así mismo, certificas que toda la información que proporcionas a Importadora Shop Online descrita en la notificación, es verídica y comprobable. La alteración de cualquier dato es penada por la ley.                </li>
-                <li>                    Toda compra arriba de <strong>$1,000 CIF</strong> está sujeta a trámite de póliza individual (consulta las tarifas).                </li>
-            </ol>
-        </div>
-
-        <div class="terminos">
-            <label>
-                <input                    type="checkbox"                    id="acepto"                    required                >
-                <span>                    Acepto los términos y condiciones y certifico que la información proporcionada es verídica.                </span>
-            </label>
-        </div>
-
-        <button            type="submit"            id="boton"        >            ENVIAR NOTIFICACIÓN        </button>
-
-        <div            id="mensaje"            class="mensaje"        ></div>
-
-    </form>
+<div class="sub">
+Ingresa la información de tu paquete y adjunta tu comprobante de compra.
 </div>
 
+
+<form id="formulario">
+
+
+<div class="section-title">
+Datos del paquete
+</div>
+
+
+<div class="grid">
+
+
+<div class="field">
+
+<label>
+Número de sección <span class="required">*</span>
+</label>
+
+<input
+type="text"
+id="seccion"
+required
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Nombre <span class="required">*</span>
+</label>
+
+<input
+type="text"
+id="nombre"
+required
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Transportista <span class="required">*</span>
+</label>
+
+<select
+id="transportista"
+required
+>
+
+<option value="">
+Selecciona una opción
+</option>
+
+<option value="USPS">
+USPS
+</option>
+
+<option value="UPS">
+UPS
+</option>
+
+<option value="FEDEX">
+FedEx
+</option>
+
+<option value="AMAZON">
+Amazon
+</option>
+
+<option value="OTRO">
+Otro
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Número de rastreo <span class="required">*</span>
+</label>
+
+<input
+type="text"
+id="tracking"
+required
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Tienda <span class="required">*</span>
+</label>
+
+<input
+type="text"
+id="tienda"
+required
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Total factura US$ <span class="required">*</span>
+</label>
+
+<input
+type="number"
+id="total"
+min="0"
+step="0.01"
+placeholder="Ejemplo: 125.50"
+required
+>
+
+<div class="hint">
+Valor total que incluya artículo, shipping y taxes.
+</div>
+
+</div>
+
+
+<div class="field full">
+
+<label>
+Contenido del paquete <span class="required">*</span>
+</label>
+
+<textarea
+id="contenido"
+placeholder="Describe el contenido del paquete"
+required
+></textarea>
+
+</div>
+
+
+<div class="field full">
+
+<label>
+Correo electrónico
+</label>
+
+<input
+type="email"
+id="correo"
+placeholder="correo@ejemplo.com"
+>
+
+<div class="hint">
+Campo opcional.
+</div>
+
+</div>
+
+
+</div>
+
+
+<div class="section-title">
+Comprobante de compra
+</div>
+
+
+<div class="upload">
+
+<label>
+Carga el comprobante de compra
+<span class="required">*</span>
+</label>
+
+<input
+type="file"
+id="archivo"
+accept=".jpg,.jpeg,.png,.pdf"
+required
+>
+
+<div class="hint">
+Formatos permitidos: JPG, PNG y PDF.
+Máximo 10 MB.
+</div>
+
+</div>
+
+
+<div class="important">
+
+<div class="important-title">
+⚠️ IMPORTANTE
+</div>
+
+<ol class="note-list">
+
+<li>
+Debes tomar en cuenta que si tu factura corresponde a más de un paquete debes recortar el área correspondiente o comunicarte con nosotros para asesorarte.
+</li>
+
+<li>
+Se declara la totalidad del documento, por lo que si incluyes productos o valores que no se encuentran en el paquete, pagarás el impuesto correspondiente por la totalidad que indique la factura.
+</li>
+
+<li>
+Importadora Shop Online recibe tu notificación con información sobre tu paquete, como cliente aceptas que los datos enviados son verídicos y pueden ser utilizados para la declaración jurada ante las autoridades Aduaneras de Guatemala. Queda a criterio del vista de aduana aceptar o no dicho documento. Así mismo, certificas que toda la información que proporcionas a Importadora Shop Online descrita en la notificación, es verídica y comprobable. La alteración de cualquier dato es penada por la ley.
+</li>
+
+<li>
+Toda compra arriba de <strong>$1,000 CIF</strong> está sujeta a trámite de póliza individual (consulta las tarifas).
+</li>
+
+</ol>
+
+</div>
+
+
+<div class="terms">
+
+<label>
+
+<input
+type="checkbox"
+id="acepto"
+required
+>
+
+<span>
+Acepto los términos y condiciones y certifico que la información proporcionada es verídica.
+</span>
+
+</label>
+
+</div>
+
+
+<button
+type="submit"
+class="btn"
+id="boton"
+>
+ENVIAR NOTIFICACIÓN
+</button>
+
+
+<div
+id="mensaje"
+class="message"
+></div>
+
+
+</form>
+
+
+<div class="footer">
+Importadora Shop Online · Guatemala
+</div>
+
+</div>
+
+</div>
+
+
 <script>
-const URL_APPS_SCRIPT ="https://script.google.com/macros/s/AKfycbwZU7U6ugAbMudiDLmyekjsKll8hd6VZniA4wXPT7ivF6zfAxY-nC6oMZxTcToZ7iOF/exec";
 
-document.getElementById("formulario").addEventListener("submit", async function(e) {
-    e.preventDefault();
+const URL_APPS_SCRIPT =
+"https://script.google.com/macros/s/AKfycbwZU7U6ugAbMudiDLmyekjsKll8hd6VZniA4wXPT7ivF6zfAxY-nC6oMZxTcToZ7iOF/exec";
 
-    const boton =        document.getElementById("boton");
-    const mensaje =        document.getElementById("mensaje");
-    const archivo =        document.getElementById("archivo").files[0];
 
-    if (!archivo) {
-        mensaje.textContent =            "Debes adjuntar tu comprobante de compra.";
-        mensaje.className =            "mensaje error";
-        return;
-    }
+document.getElementById("formulario").addEventListener("submit", async function(e){
 
-    const maximo =        10 * 1024 * 1024;
+e.preventDefault();
 
-    if (archivo.size > maximo) {
-        mensaje.textContent =            "El archivo es demasiado grande. El máximo permitido es de 10 MB.";
-        mensaje.className =            "mensaje error";
-        return;
-    }
+const boton=document.getElementById("boton");
 
-    boton.disabled = true;
-    boton.textContent =        "ENVIANDO...";
-    mensaje.textContent = "";
+const mensaje=document.getElementById("mensaje");
 
-    try {
-        const base64 =            await convertirBase64(archivo);
+const archivo=document.getElementById("archivo").files[0];
 
-        const datos = {
-            seccion:                document.getElementById("seccion").value,
-            nombre:                document.getElementById("nombre").value,
-            transportista:                document.getElementById("transportista").value,
-            tracking:                document.getElementById("tracking").value,
-            tienda:                document.getElementById("tienda").value,
-            contenido:                document.getElementById("contenido").value,
-            total:                document.getElementById("total").value,
-            correo:                document.getElementById("correo").value,
-            archivo: {
-                nombre:                    archivo.name,
-                tipo:                    archivo.type,
-                data:                    base64
-            }
-        };
 
-        await fetch(
-            URL_APPS_SCRIPT,
-            {
-                method: "POST",
-                mode: "no-cors",
-                headers: {
-                    "Content-Type":                        "text/plain;charset=utf-8"
-                },
-                body:                    JSON.stringify(datos)
-            }
-        );
+if(!archivo){
 
-        mensaje.textContent =            "✓ Notificación enviada correctamente. ¡Gracias!";
-        mensaje.className =            "mensaje exito";
+mensaje.textContent="Debes adjuntar tu comprobante de compra.";
 
-        document            .getElementById("formulario")            .reset();
+mensaje.className="message error";
 
-    } catch(error) {
-        console.error(error);
+return;
 
-        mensaje.textContent =            "No fue posible enviar la notificación. Intenta nuevamente.";
-        mensaje.className =            "mensaje error";
-    }
+}
 
-    boton.disabled = false;
-    boton.textContent =        "ENVIAR NOTIFICACIÓN";
+
+if(archivo.size>10*1024*1024){
+
+mensaje.textContent="El archivo supera el límite de 10 MB.";
+
+mensaje.className="message error";
+
+return;
+
+}
+
+
+boton.disabled=true;
+
+boton.textContent="ENVIANDO...";
+
+
+try{
+
+const base64=await convertirBase64(archivo);
+
+
+const datos={
+
+seccion:document.getElementById("seccion").value,
+
+nombre:document.getElementById("nombre").value,
+
+transportista:document.getElementById("transportista").value,
+
+tracking:document.getElementById("tracking").value,
+
+tienda:document.getElementById("tienda").value,
+
+contenido:document.getElementById("contenido").value,
+
+total:document.getElementById("total").value,
+
+correo:document.getElementById("correo").value,
+
+archivo:{
+
+nombre:archivo.name,
+
+tipo:archivo.type,
+
+data:base64
+
+}
+
+};
+
+
+await fetch(
+
+URL_APPS_SCRIPT,
+
+{
+
+method:"POST",
+
+mode:"no-cors",
+
+headers:{
+"Content-Type":"text/plain;charset=utf-8"
+},
+
+body:JSON.stringify(datos)
+
+}
+
+);
+
+
+mensaje.textContent="✓ Notificación enviada correctamente.";
+
+mensaje.className="message success";
+
+
+document.getElementById("formulario").reset();
+
+
+}catch(error){
+
+console.error(error);
+
+mensaje.textContent="No fue posible enviar la notificación. Intenta nuevamente.";
+
+mensaje.className="message error";
+
+}
+
+
+boton.disabled=false;
+
+boton.textContent="ENVIAR NOTIFICACIÓN";
+
 });
 
-function convertirBase64(archivo) {
-    return new Promise(
-        (resolve, reject) => {
-            const lector =                new FileReader();
 
-            lector.onload =                function() {
-                    const resultado =                        lector.result;
+function convertirBase64(archivo){
 
-                    resolve(                        resultado.split(",")[1]                    );
-                };
+return new Promise((resolve,reject)=>{
 
-            lector.onerror =                reject;
+const lector=new FileReader();
 
-            lector.readAsDataURL(archivo);
-        }
-    );
+lector.onload=function(){
+
+resolve(
+lector.result.split(",")[1]
+);
+
+};
+
+lector.onerror=reject;
+
+lector.readAsDataURL(archivo);
+
+});
+
 }
+
 </script>
+
 </body>
 </html>
